@@ -11,6 +11,14 @@ const supabaseConfigured = Boolean(
 const supabase = supabaseConfigured ? useSupabaseClient() : null
 const user = supabaseConfigured ? useSupabaseUser() : ref(null)
 const signingOut = ref(false)
+const menuItems = [
+  { name: 'Rendang', image: '/images/rendang.jpg' },
+  { name: 'Sate Ayam', image: '/images/sate-ayam.jpg' },
+  { name: 'Soto Ayam', image: '/images/soto-ayam.jpg' },
+  { name: 'Nasi Rames', image: '/images/nasi-rames.jpg' },
+  { name: 'Es Tebu', image: '/images/es-tebu.jpg' },
+  { name: 'Daging Gulai', image: '/images/daging-gulai.webp' }
+]
 
 async function signOut() {
   if (!supabase) {
@@ -205,44 +213,20 @@ async function signOut() {
         </NuxtLink>
       </div>
       <div class="menu-cards">
-        <article class="menu-card">
-          <div
-            class="dish-art dish-rendang"
-            aria-hidden="true"
-          >
-            <span>❋</span>
+        <article
+          v-for="item in menuItems"
+          :key="item.image"
+          class="menu-card"
+        >
+          <div class="dish-image">
+            <img
+              :src="item.image"
+              :alt="item.name"
+              loading="lazy"
+              decoding="async"
+            >
           </div>
-          <div class="dish-meta">
-            <span>SUMATRA BARAT</span><span>01</span>
-          </div>
-          <h3>Rendang Sapi</h3>
-          <p>Dimasak perlahan dengan rempah pilihan.</p>
-        </article>
-        <article class="menu-card">
-          <div
-            class="dish-art dish-satay"
-            aria-hidden="true"
-          >
-            <span>✳</span>
-          </div>
-          <div class="dish-meta">
-            <span>JAWA TENGAH</span><span>02</span>
-          </div>
-          <h3>Sate Ayam</h3>
-          <p>Asap arang, bumbu kacang, rasa yang akrab.</p>
-        </article>
-        <article class="menu-card">
-          <div
-            class="dish-art dish-soto"
-            aria-hidden="true"
-          >
-            <span>✿</span>
-          </div>
-          <div class="dish-meta">
-            <span>JAWA TIMUR</span><span>03</span>
-          </div>
-          <h3>Soto Ayam</h3>
-          <p>Kuah hangat dengan sentuhan jeruk nipis.</p>
+          <h3>{{ item.name }}</h3>
         </article>
       </div>
     </section>
@@ -737,7 +721,7 @@ async function signOut() {
 
 .menu-cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 23px;
 }
 
@@ -745,115 +729,31 @@ async function signOut() {
   padding-bottom: 8px;
 }
 
-.dish-art {
-  position: relative;
-  display: grid;
+.dish-image {
   height: 205px;
   overflow: hidden;
   border-radius: 3px;
   background: #ebe2d2;
-  place-items: center;
 }
 
-.dish-art::before {
-  width: 136px;
-  height: 136px;
-  border: 10px solid #fffdf8;
-  border-radius: 50%;
-  background: #decdb1;
-  box-shadow: 0 8px 20px #49351e1a;
-  content: "";
+.dish-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 220ms ease;
 }
 
-.dish-art::after {
-  position: absolute;
-  width: 72px;
-  height: 63px;
-  border-radius: 50%;
-  background: #964b30;
-  content: "";
-}
-
-.dish-art span {
-  position: absolute;
-  z-index: 1;
-  color: #728258;
-  font-size: 31px;
-}
-
-.dish-rendang::after {
-  background: radial-gradient(circle at 30% 40%, #d89c5f 0 4px, transparent 5px), radial-gradient(circle at 67% 53%, #c28049 0 5px, transparent 6px), #8b442b;
-  transform: rotate(-18deg);
-}
-
-.dish-rendang span {
-  top: 53px;
-  right: 72px;
-}
-
-.dish-satay {
-  background: #e6dfd0;
-}
-
-.dish-satay::after {
-  width: 96px;
-  height: 21px;
-  border-radius: 12px;
-  background: repeating-linear-gradient(90deg, #a95530 0 19px, #d08b53 20px 25px);
-  box-shadow: 0 11px #8f472e, 0 22px #aa5a34;
-  transform: rotate(-22deg);
-}
-
-.dish-satay span {
-  top: 44px;
-  left: 75px;
-}
-
-.dish-soto {
-  background: #e8e1d3;
-}
-
-.dish-soto::before {
-  background: #d7b777;
-}
-
-.dish-soto::after {
-  width: 83px;
-  height: 78px;
-  background: radial-gradient(circle at 29% 42%, #f8edcb 0 6px, transparent 7px), radial-gradient(circle at 67% 60%, #efe1ba 0 8px, transparent 9px), #d5b66e;
-}
-
-.dish-soto span {
-  right: 76px;
-  bottom: 45px;
-}
-
-.dish-meta {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 19px;
-  color: var(--color-green);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 1.35px;
-}
-
-.dish-meta span:last-child {
-  color: #b2aa9b;
+.menu-card:hover .dish-image img {
+  transform: scale(1.035);
 }
 
 .menu-card h3 {
-  margin: 9px 0 5px;
+  margin: 13px 0 0;
   color: var(--color-brown-dark);
   font-family: Georgia, "Times New Roman", serif;
   font-size: 21px;
   font-weight: 400;
-}
-
-.menu-card p {
-  margin: 0;
-  color: #818074;
-  font-size: 12px;
 }
 
 .site-footer {
@@ -960,12 +860,17 @@ async function signOut() {
   }
 
   .menu-cards {
-    grid-template-columns: 1fr;
-    gap: 28px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 14px;
   }
 
-  .dish-art {
-    height: 230px;
+  .dish-image {
+    height: auto;
+    aspect-ratio: 1.1;
+  }
+
+  .menu-card h3 {
+    font-size: 18px;
   }
 
   .site-footer {
