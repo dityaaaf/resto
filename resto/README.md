@@ -59,6 +59,23 @@ pnpm preview
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
 
+## Supabase admin dashboard
+
+1. Run the SQL in `supabase/setup.sql` from the Supabase SQL Editor. It creates the profile table, row-level security policy, and profile trigger.
+2. Register an account in the app. Existing accounts are also added to the profile table when the SQL is run.
+3. To grant dashboard access, update that account's role from the SQL Editor:
+
+   ```sql
+   update public.users
+   set role = 'admin'
+   where email = 'your-account@example.com';
+   ```
+
+4. Add `NUXT_SUPABASE_SECRET_KEY` to `.env` using a Supabase secret key (or legacy `service_role` key). Find it in the project's API keys settings. This key is required by the server-side user-management API; never use a `NUXT_PUBLIC_` prefix or commit the key.
+5. Open `/admin/users` to create, edit, and delete accounts. Every user-management endpoint verifies the signed-in user's `admin` role on the server.
+
+The `/admin` page also has a navigation guard. Keep row-level security enabled; the secret key bypasses RLS and must remain server-only.
+
 ## Renovate integration
 
 Install [Renovate GitHub app](https://github.com/apps/renovate/installations/select_target) on your repository and you are good to go.

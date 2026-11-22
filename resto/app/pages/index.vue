@@ -1,16 +1,10 @@
 <script setup lang="ts">
 /* eslint-disable better-tailwindcss/no-unknown-classes */
 
-const { public: publicConfig } = useRuntimeConfig()
-const supabaseConfigured = Boolean(
-  publicConfig.supabase.url
-  && publicConfig.supabase.key
-  && publicConfig.supabase.url !== 'https://your-project.supabase.co'
-  && publicConfig.supabase.key !== 'your-supabase-publishable-key'
-)
-const supabase = supabaseConfigured ? useSupabaseClient() : null
-const user = supabaseConfigured ? useSupabaseUser() : ref(null)
-const signingOut = ref(false)
+definePageMeta({
+  layout: 'header'
+})
+
 const menuItems = [
   { name: 'Rendang', image: '/images/rendang.jpg' },
   { name: 'Sate Ayam', image: '/images/sate-ayam.jpg' },
@@ -19,86 +13,10 @@ const menuItems = [
   { name: 'Es Tebu', image: '/images/es-tebu.jpg' },
   { name: 'Daging Gulai', image: '/images/daging-gulai.webp' }
 ]
-
-async function signOut() {
-  if (!supabase) {
-    throw createError({ statusCode: 500, statusMessage: 'Supabase belum dikonfigurasi.' })
-  }
-
-  signingOut.value = true
-  const { error } = await supabase.auth.signOut()
-  signingOut.value = false
-
-  if (error) {
-    throw createError({ statusCode: 500, statusMessage: error.message })
-  }
-}
 </script>
 
 <template>
   <main class="home-page">
-    <header class="site-header">
-      <NuxtLink
-        class="brand"
-        to="/"
-        aria-label="Rasa Rantau, beranda"
-      >
-        <span
-          class="brand-mark"
-          aria-hidden="true"
-        >
-          <svg
-            viewBox="0 0 40 40"
-            fill="none"
-          >
-            <path
-              d="M31.8 7.7C21.4 7.7 12.7 10.1 9.7 16.8c-2.2 4.9.4 10.3 5.3 10.3 8.5 0 15.2-8.8 16.8-19.4Z"
-              fill="currentColor"
-            />
-            <path
-              d="M9.3 32.2c3.1-7.5 8.7-12.5 16.5-16.5"
-              stroke="#FBF8F1"
-              stroke-width="1.8"
-              stroke-linecap="round"
-            />
-          </svg>
-        </span>
-        <span class="brand-name">rasa<span>rantau</span></span>
-      </NuxtLink>
-
-      <nav
-        class="site-nav"
-        aria-label="Navigasi utama"
-      >
-        <a href="#cerita">Cerita kami</a>
-        <a href="#menu">Menu favorit</a>
-      </nav>
-
-      <div class="header-action">
-        <span
-          v-if="user"
-          class="signed-in"
-        >Halo, {{ user.email }}</span>
-        <button
-          v-if="user"
-          class="button button-outline header-button"
-          type="button"
-          :disabled="signingOut"
-          @click="signOut"
-        >
-          {{ signingOut ? 'Keluar...' : 'Keluar' }}
-        </button>
-        <NuxtLink
-          v-else
-          class="button button-outline header-button"
-          to="/login"
-        >
-          Masuk
-          <span aria-hidden="true">↗</span>
-        </NuxtLink>
-      </div>
-    </header>
-
     <section class="hero">
       <div class="hero-copy">
         <p class="eyebrow">
@@ -270,16 +188,6 @@ async function signOut() {
   background: var(--color-cream);
 }
 
-.site-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: min(1160px, calc(100% - 96px));
-  height: 88px;
-  margin: auto;
-  border-bottom: 1px solid #e8e2d6;
-}
-
 .brand {
   display: inline-flex;
   align-items: center;
@@ -310,36 +218,12 @@ async function signOut() {
   color: var(--color-green);
 }
 
-.site-nav {
-  display: flex;
-  gap: 38px;
-  color: #6f6e63;
-  font-size: 13px;
-}
-
-.site-nav a,
 .text-link {
   transition: color 160ms ease;
 }
 
-.site-nav a:hover,
 .text-link:hover {
   color: var(--color-green);
-}
-
-.header-action {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.signed-in {
-  max-width: 200px;
-  overflow: hidden;
-  color: var(--color-muted);
-  font-size: 12px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .button {
@@ -362,8 +246,7 @@ async function signOut() {
 }
 
 .button:focus-visible,
-.text-link:focus-visible,
-.site-nav a:focus-visible {
+.text-link:focus-visible {
   outline: 3px solid #9cac8e;
   outline-offset: 3px;
 }
@@ -371,19 +254,6 @@ async function signOut() {
 .button:disabled {
   cursor: wait;
   opacity: 0.7;
-}
-
-.button-outline {
-  min-height: 40px;
-  padding: 0 17px;
-  border-color: #d7d2c7;
-  background: transparent;
-  color: var(--color-brown-dark);
-}
-
-.button-outline:hover {
-  border-color: var(--color-green);
-  background: #f3f3e9;
 }
 
 .button-primary {
@@ -781,14 +651,6 @@ async function signOut() {
   .hero,
   .menu-section {
     width: min(100% - 40px, 560px);
-  }
-
-  .site-header {
-    height: 72px;
-  }
-
-  .site-nav {
-    display: none;
   }
 
   .hero {

@@ -23,7 +23,7 @@ async function signIn() {
   errorMessage.value = ''
 
   if (!supabase) {
-    errorMessage.value = 'Supabase belum dikonfigurasi. Isi NUXT_PUBLIC_SUPABASE_URL dan NUXT_PUBLIC_SUPABASE_KEY di file .env.'
+    errorMessage.value = 'Konfigurasi Supabase belum tersedia. Periksa URL dan publishable key di file .env.'
     return
   }
 
@@ -38,7 +38,7 @@ async function signIn() {
 
   if (error) {
     errorMessage.value = error.message.toLowerCase().includes('invalid login credentials')
-      ? 'Email atau kata sandi salah. Jika belum punya akun, silakan daftar terlebih dahulu.'
+      ? 'Email atau kata sandi tidak sesuai. Coba lagi, atau daftar jika belum memiliki akun.'
       : error.message
     return
   }
@@ -80,10 +80,9 @@ async function signIn() {
     <div class="login-layout">
       <section class="welcome-panel">
         <p class="welcome-eyebrow">
-          SENANG BERTEMU KEMBALI
+          SELAMAT DATANG KEMBALI
         </p>
         <h1>Selalu ada<br><em>rasa untuk pulang.</em></h1>
-        <p>Masuk untuk menikmati cerita dan cita rasa Nusantara yang kami siapkan khusus untukmu.</p>
         <div
           class="welcome-art"
           aria-hidden="true"
@@ -97,7 +96,6 @@ async function signIn() {
             <span class="welcome-side" />
             <span class="welcome-greens" />
           </div>
-          <span class="welcome-art-label">Racikan hangat dari dapur kami</span>
         </div>
         <NuxtLink
           class="back-home"
@@ -152,9 +150,9 @@ async function signIn() {
           <p class="card-eyebrow">
             AKUN RASA RANTAU
           </p>
-          <h2>Selamat datang.</h2>
+          <h2>Masuk ke akunmu.</h2>
           <p class="card-description">
-            Masuk ke akunmu untuk melanjutkan.
+            Gunakan email dan kata sandi untuk melanjutkan.
           </p>
 
           <form
@@ -166,17 +164,17 @@ async function signIn() {
               class="form-error"
               role="status"
             >
-              Supabase belum dikonfigurasi. Isi NUXT_PUBLIC_SUPABASE_URL dan NUXT_PUBLIC_SUPABASE_KEY di file .env.
+              Konfigurasi Supabase belum tersedia. Periksa URL dan publishable key di file .env.
             </p>
 
-            <label for="email">Alamat email</label>
+            <label for="email">Email</label>
             <input
               id="email"
               v-model="email"
               autocomplete="email"
               inputmode="email"
               name="email"
-              placeholder="nama@email.com"
+              placeholder="contoh@email.com"
               required
               type="email"
             >
@@ -200,7 +198,7 @@ async function signIn() {
                 :aria-label="showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'"
                 @click="showPassword = !showPassword"
               >
-                {{ showPassword ? 'Sembunyikan' : 'Lihat' }}
+                {{ showPassword ? 'Sembunyikan' : 'Tampilkan' }}
               </button>
             </div>
 
@@ -217,7 +215,7 @@ async function signIn() {
               type="submit"
               :disabled="isSubmitting || !supabaseConfigured"
             >
-              {{ isSubmitting ? 'Sedang masuk...' : supabaseConfigured ? 'Masuk ke akun' : 'Hubungkan Supabase dulu' }}
+              {{ isSubmitting ? 'Sedang memproses...' : supabaseConfigured ? 'Masuk' : 'Supabase belum terhubung' }}
               <span
                 v-if="!isSubmitting"
                 aria-hidden="true"
@@ -226,11 +224,11 @@ async function signIn() {
           </form>
 
           <p class="login-help">
-            Belum punya akun?
+            Belum memiliki akun?
             <NuxtLink
               class="register-link"
               to="/register"
-            >Daftar di sini</NuxtLink>
+            >Daftar sekarang</NuxtLink>
           </p>
         </div>
       </section>

@@ -33,6 +33,7 @@ export default defineNuxtConfig({
   },
 
   supabase: {
-    redirect: false
+    redirect: false,
+    types: '~/types/database.types.ts'
   }
 })
